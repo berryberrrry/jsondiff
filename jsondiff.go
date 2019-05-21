@@ -1,7 +1,7 @@
 /*
  * @Author: berryberry
  * @since: 2019-05-21 14:42:12
- * @lastTime: 2019-05-21 21:22:31
+ * @lastTime: 2019-05-21 21:46:57
  * @LastAuthor: Do not edit
  */
 package jsondiff
@@ -19,11 +19,6 @@ type Config struct {
 	// HasExceptedField bool
 	ExceptedFields map[int]map[string]int
 }
-
-// type Field struct {
-// 	Key  string
-// 	Deep int
-// }
 
 type Differ struct {
 	Conf Config
@@ -46,68 +41,7 @@ func New() *Differ {
 	}
 }
 
-// func Diff(expected, actual interface{}) []string {
-
-// 	differ := &Differ{
-// 		Conf: Config{
-// 			MaxDiff:          10,
-// 			MaxDeep:          10,
-// 			SortedSlice:      true,
-// 			HasExceptedField: false,
-// 			ExceptedField:    nil,
-// 		},
-// 		diff: []string{},
-// 		buff: []string{},
-// 	}
-
-// 	if expected == nil && actual == nil {
-// 		return nil
-// 	} else if expected == nil && actual != nil {
-// 		differ.saveDiff("<nil>", actual)
-// 		return differ.diff
-// 	} else if expected != nil && actual == nil {
-// 		differ.saveDiff(expected, "<nil>")
-// 		return differ.diff
-// 	}
-
-// 	expectedVal := reflect.ValueOf(expected)
-// 	actualVal := reflect.ValueOf(actual)
-
-// 	differ.compare(expectedVal, actualVal, 0)
-// 	if len(differ.diff) > 0 {
-// 		return differ.diff
-// 	}
-
-// 	return nil
-// }
-
 func (d *Differ) Compare(expected, actual map[string]interface{}) []string {
-	// exceptedKeysMap := d.Conf.ExceptedFields[0]
-	// for expectedKey, expectedVal := range expected {
-	// 	if _, ok := exceptedKeysMap[expectedKey]; ok {
-	// 		continue
-	// 	}
-	// 	actualVal := actual[expectedKey]
-	// 	if actualVal != nil {
-	// 		d.compareVal(expectedVal, actualVal, 1)
-	// 	} else {
-	// 		d.saveDiff(expectedVal, "<nil>")
-	// 	}
-	// }
-	// if len(expected) == len(actual) {
-	// 	return
-	// }
-
-	// for actualKey, actualVal := range actual {
-	// 	if _, ok := exceptedKeysMap[actualKey]; ok {
-	// 		continue
-	// 	}
-
-	// 	expectedVal := expected[actualKey]
-	// 	if expectedVal == nil {
-	// 		d.saveDiff("<nil>", actualVal)
-	// 	}
-	// }
 	d.compareMap(expected, actual, 1)
 	return d.diff
 }
