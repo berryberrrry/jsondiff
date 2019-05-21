@@ -1,10 +1,27 @@
-# JSON Diff in Golang
+# Efficient JSON Diff in Golang
+
+## Introduction
+
+**Features** :
+
+- json diffs
+- set fileds you not want to compare
+- set max deep
+- set max diff
+
+---
 
 ## How To Use
 
+### Installation
 
 ```
+go get github.com/berryberrrry/jsondiff
+```
 
+### Usage
+
+```
 func main() {
     expectedData := []byte(
         `{
@@ -41,7 +58,5 @@ func main() {
     // if you add 
     // differ.AddExpectedField("b",1)
     // result will be :  map[c].array[2]: c != d
-
 }
-
 ```
