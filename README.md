@@ -4,17 +4,19 @@
 
 ```
 func main() {
-	expectedData, err := ioutil.ReadFile("expected.json")
-	if err != nil {
-		panic(err)
-	}
-	actualData, err := ioutil.ReadFile("actual.json")
-	if err != nil {
-		panic(err)
-	}
+	expectedData := []byte(
+		`{
+			"a":"a",
+			"b":"b",
+			"c":["a","b","c"]}`)
+	actualData := []byte(
+		`{
+			"a":"a",
+			"b":"a",
+			"c":["a","b","d"]}`)
 
 	var expected, actual map[string]interface{}
-	err = json.Unmarshal(expectedData, &expected)
+	err := json.Unmarshal(expectedData, &expected)
 	if err != nil {
 		panic(err)
 	}
@@ -24,14 +26,18 @@ func main() {
 	}
 
 	differ := jsondiff.New()
-	differ.AddExpectedField("b", 1)
-	differ.AddExpectedField("textLen", -1)
-	differ.AddExpectedField("textOffset", -1)
-	differ.Conf.MaxDiff = 10000
-	differ.Conf.MaxDeep = 15
-	// differ.AddExpectedField("c", 1)
+	// differ.AddExpectedField("b", 1)
+
 	diffs := differ.Compare(expected, actual)
 	fmt.Println(strings.Join(diffs, "\n"))
+
+    // result: 
+    // map[b]: b != a
+    // map[c].array[2]: c != d
+
+    // if you add 
+    // differ.AddExpectedField("b",1)
+    // result will be :  map[c].array[2]: c != d
 }
 
 ```
