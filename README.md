@@ -4,11 +4,12 @@
 
 **Features** :
 
-- json diffs
-- set fileds you not want to compare
-- set max deep
-- set max diff
-
+- JSON diffs
+- Custom output:
+    - set fileds you do not want to compare
+    - set max deep
+    - set max diff
+    
 ---
 
 ## How To Use
