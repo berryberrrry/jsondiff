@@ -9,7 +9,7 @@
     - set fileds you do not want to compare
     - set max deep
     - set max diff
-    
+
 ---
 
 ## How To Use
@@ -22,6 +22,26 @@ go get github.com/berryberrrry/jsondiff
 
 ### Usage
 
+1. Create a Differ
+
+```
+    differ := jsondiff.New()
+```
+
+2. Config
+
+```
+    differ.Config.MaxDeep = 100
+    differ.Config.MaxDiff = 100
+    differ.AddExpectedField("something",1)
+```
+3. Compare
+
+```
+    diffs := differ.Compare(expected, actual)
+```
+
+### Example
 ```
 func main() {
     expectedData := []byte(
