@@ -1,7 +1,7 @@
 /*
  * @Author: berryberry
  * @since: 2019-05-21 14:42:12
- * @lastTime: 2019-05-21 21:46:57
+ * @lastTime: 2019-05-22 14:04:44
  * @LastAuthor: Do not edit
  */
 package jsondiff
@@ -107,7 +107,7 @@ func (d *Differ) compareArray(expected, actual []interface{}, deep int) {
 }
 
 func (d *Differ) compareVal(expectedVal, actualVal interface{}, deep int) {
-	if deep > d.Conf.MaxDeep {
+	if deep > d.Conf.MaxDeep || len(d.diff) >= d.Conf.MaxDiff {
 		return
 	}
 	expectedType := reflect.TypeOf(expectedVal)
@@ -119,8 +119,14 @@ func (d *Differ) compareVal(expectedVal, actualVal interface{}, deep int) {
 
 	switch expectedVal.(type) {
 	case map[string]interface{}:
+		if deep == d.Conf.MaxDeep && !reflect.DeepEqual(expectedVal, actualVal) {
+			d.saveUnReadDiff("map")
+		}
 		d.compareMap(expectedVal.(map[string]interface{}), actualVal.(map[string]interface{}), deep)
 	case []interface{}:
+		if deep == d.Conf.MaxDeep && !reflect.DeepEqual(expectedVal, actualVal) {
+			d.saveUnReadDiff("array")
+		}
 		d.compareArray(expectedVal.([]interface{}), actualVal.([]interface{}), deep)
 	default:
 		if !reflect.DeepEqual(expectedVal, actualVal) {
@@ -142,6 +148,18 @@ func (d *Differ) saveDiff(expectedVal, actualVal interface{}) {
 	}
 }
 
+func (d *Differ) saveUnReadDiff(typeStr string) {
+	if len(d.diff) >= d.Conf.MaxDiff {
+		return
+	}
+	if len(d.buff) > 0 {
+		path := strings.Join(d.buff, ".")
+		d.diff = append(d.diff, fmt.Sprintf("%s: %s different", path, typeStr))
+	} else {
+		d.diff = append(d.diff, fmt.Sprintf("%s different", typeStr))
+	}
+}
+
 func (d *Differ) push(str string) {
 	d.buff = append(d.buff, str)
 }
@@ -153,6 +171,9 @@ func (d *Differ) pop() {
 }
 
 func (d *Differ) AddExpectedField(key string, deep int) {
+	if deep <= 0 {
+		deep = -1
+	}
 	keysMap := d.Conf.ExceptedFields[deep]
 	if keysMap == nil {
 		newMap := make(map[string]int, 0)
